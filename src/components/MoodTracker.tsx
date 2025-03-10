@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Smile, SmilePlus, Meh, Frown, FrownOpen } from 'lucide-react';
+import { Smile, SmilePlus, Meh, Frown, Angry } from 'lucide-react';
 import { useMoodData } from '@/hooks/useMoodData';
 import { toast } from '@/hooks/use-toast';
 
@@ -9,7 +9,7 @@ const MOOD_OPTIONS = [
   { value: 'good', label: 'Good', icon: Smile, color: 'text-emerald-500' },
   { value: 'okay', label: 'Okay', icon: Meh, color: 'text-yellow-500' },
   { value: 'bad', label: 'Bad', icon: Frown, color: 'text-orange-500' },
-  { value: 'terrible', label: 'Terrible', icon: FrownOpen, color: 'text-red-500' },
+  { value: 'terrible', label: 'Terrible', icon: Angry, color: 'text-red-500' },
 ] as const;
 
 export function MoodTracker() {

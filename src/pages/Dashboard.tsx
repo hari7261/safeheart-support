@@ -101,12 +101,11 @@ const Dashboard = () => {
                           <Tooltip />
                           <Bar
                             dataKey="value"
-                            nameKey="name"
                             fill="fill"
                             radius={[4, 4, 0, 0]}
                           >
                             {chartData.map((entry, index) => (
-                              <Bar key={`cell-${index}`} fill={entry.color} />
+                              <Bar key={`cell-${index}`} dataKey="value" fill={entry.color} />
                             ))}
                           </Bar>
                         </BarChart>
