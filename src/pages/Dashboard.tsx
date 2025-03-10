@@ -4,7 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { MoodTracker } from '@/components/MoodTracker';
 import { useMoodData } from '@/hooks/useMoodData';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Calendar, Clock, FileText } from 'lucide-react';
 
 const Dashboard = () => {
@@ -99,13 +99,9 @@ const Dashboard = () => {
                           <XAxis dataKey="name" />
                           <YAxis allowDecimals={false} />
                           <Tooltip />
-                          <Bar
-                            dataKey="value"
-                            fill="fill"
-                            radius={[4, 4, 0, 0]}
-                          >
+                          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                             {chartData.map((entry, index) => (
-                              <Bar key={`cell-${index}`} dataKey="value" fill={entry.color} />
+                              <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                           </Bar>
                         </BarChart>
