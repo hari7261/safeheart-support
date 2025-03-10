@@ -5,8 +5,10 @@ import { Footer } from '@/components/Footer';
 import { EmergencyButton } from '@/components/EmergencyButton';
 import { useEmergencyContacts } from '@/hooks/useEmergencyContacts';
 import { SafetyTipsCard } from '@/components/SafetyTipsCard';
+import { HelplineDirectory } from '@/components/HelplineDirectory';
 import { Shield, Phone, MessageSquare, User, Plus, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { generalSafetyTips, digitalSafetyTips } from '@/data/safetyTips';
 
 const Emergency = () => {
   const { 
@@ -70,7 +72,7 @@ const Emergency = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-pink-900 mb-2">Emergency Resources</h1>
             <p className="text-pink-700">
-              Quick access to safety features and emergency contacts
+              Quick access to safety features, emergency contacts, and helplines
             </p>
           </div>
           
@@ -103,9 +105,26 @@ const Emergency = () => {
                   </ul>
                 </div>
               </div>
+              
+              {/* Safety Tips */}
+              <div className="mt-8">
+                <SafetyTipsCard 
+                  title="Safety Tips" 
+                  tips={generalSafetyTips} 
+                />
+              </div>
+              
+              {/* Digital Safety Tips */}
+              <div className="mt-8">
+                <SafetyTipsCard 
+                  title="Digital Safety" 
+                  tips={digitalSafetyTips} 
+                  className="bg-lavender-50"
+                />
+              </div>
             </div>
             
-            {/* Right column - Emergency Contacts & Message */}
+            {/* Right column - Emergency Contacts, Message & Helplines */}
             <div className="lg:col-span-2 space-y-8">
               {/* Emergency Contacts */}
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6">
@@ -243,8 +262,8 @@ const Emergency = () => {
                 </div>
               </div>
               
-              {/* Safety Tips */}
-              <SafetyTipsCard />
+              {/* Helplines Directory */}
+              <HelplineDirectory />
             </div>
           </div>
         </div>

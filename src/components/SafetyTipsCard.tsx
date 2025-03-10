@@ -2,31 +2,62 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
-interface SafetyTip {
+export interface SafetyTip {
   id: string;
   title: string;
   description: string;
 }
 
-interface SafetyTipsCardProps {
+export interface SafetyTipsCardProps {
   title: string;
   tips: SafetyTip[];
   className?: string;
 }
 
-export function SafetyTipsCard({ title, tips, className = '' }: SafetyTipsCardProps) {
+export function SafetyTipsCard({ title = "Safety Tips", tips = [], className = '' }: SafetyTipsCardProps) {
   const [expandedTipId, setExpandedTipId] = useState<string | null>(null);
 
   const toggleTip = (id: string) => {
     setExpandedTipId(expandedTipId === id ? null : id);
   };
 
+  const defaultTips: SafetyTip[] = [
+    {
+      id: "1",
+      title: "Share your location with trusted contacts",
+      description: "Make sure someone knows where you are going and when you expect to return. Consider using location sharing apps with trusted friends or family."
+    },
+    {
+      id: "2",
+      title: "Be aware of your surroundings",
+      description: "Stay alert and aware of your environment, especially in unfamiliar areas. Avoid using headphones or being distracted by your phone when walking alone."
+    },
+    {
+      id: "3",
+      title: "Trust your instincts",
+      description: "If a situation or person makes you uncomfortable, trust that feeling and remove yourself from the situation immediately."
+    },
+    {
+      id: "4",
+      title: "Have emergency contacts ready",
+      description: "Keep important phone numbers easily accessible, including emergency services, trusted contacts, and local helplines."
+    },
+    {
+      id: "5",
+      title: "Plan your route",
+      description: "Know your route before you start traveling, especially at night. Stick to well-lit, populated areas whenever possible."
+    }
+  ];
+
+  // Use provided tips or default tips if none are provided
+  const displayTips = tips.length > 0 ? tips : defaultTips;
+
   return (
     <div className={`p-6 rounded-xl glass-card ${className}`}>
       <h3 className="text-lg font-semibold text-pink-900 mb-4">{title}</h3>
       
       <div className="space-y-3">
-        {tips.map((tip) => (
+        {displayTips.map((tip) => (
           <div 
             key={tip.id} 
             className="border border-pink-100 rounded-lg overflow-hidden transition-all duration-300"
