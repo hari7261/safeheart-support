@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { User, Phone, Bell, MapPin, Save } from 'lucide-react';
-import { getUserProfile, saveUserProfile } from '@/utils/localStorage';
+import { getUserProfile, saveUserProfile, UserProfile } from '@/utils/localStorage';
 import { toast } from '@/hooks/use-toast';
 
 const Profile = () => {
-  const [profile, setProfile] = useState({
+  // Update the state definition to match the UserProfile interface
+  const [profile, setProfile] = useState<UserProfile>({
     name: '',
-    avatar: '',
-    phone: '',
     emergencyMessage: '',
   });
 
