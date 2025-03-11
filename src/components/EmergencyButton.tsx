@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { AlertTriangle, ShieldAlert } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { AlertTriangle, ShieldAlert, MapPin } from 'lucide-react';
 import { useEmergencyContacts } from '@/hooks/useEmergencyContacts';
 import { toast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -13,13 +13,48 @@ interface EmergencyButtonProps {
 export function EmergencyButton({ size = 'md', className = '' }: EmergencyButtonProps) {
   const [isActive, setIsActive] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
-  const { contacts, sendEmergencyAlert } = useEmergencyContacts();
+  const [locationStatus, setLocationStatus] = useState<'unknown' | 'granted' | 'denied'>('unknown');
+  const { contacts, sendEmergencyAlert, getCurrentLocation } = useEmergencyContacts();
   const navigate = useNavigate();
   
   const sizeClasses = {
     sm: 'h-12 w-12',
     md: 'h-16 w-16',
     lg: 'h-24 w-24'
+  };
+
+  // Check location permission on mount
+  useEffect(() => {
+    checkLocationPermission();
+  }, []);
+
+  const checkLocationPermission = async () => {
+    if (!navigator.geolocation) {
+      setLocationStatus('denied');
+      return;
+    }
+
+    try {
+      // Try to get the current position which will prompt for permission if not already granted
+      navigator.permissions?.query({ name: 'geolocation' })
+        .then((result) => {
+          setLocationStatus(result.state === 'granted' ? 'granted' : 'denied');
+          
+          // Set up a listener for permission changes
+          result.onchange = () => {
+            setLocationStatus(result.state === 'granted' ? 'granted' : 'denied');
+          };
+        })
+        .catch(() => {
+          // If permissions API isn't supported, we'll try getting location directly
+          getCurrentLocation()
+            .then(() => setLocationStatus('granted'))
+            .catch(() => setLocationStatus('denied'));
+        });
+    } catch (error) {
+      console.error("Error checking location permission:", error);
+      setLocationStatus('denied');
+    }
   };
   
   const handlePress = () => {
@@ -34,6 +69,18 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
       // Navigate to the emergency page to add contacts
       navigate('/emergency');
       return;
+    }
+
+    // If location permission is denied, warn the user but proceed anyway
+    if (locationStatus === 'denied') {
+      toast({
+        title: "Location access denied",
+        description: "Your location will not be shared with emergency contacts. Consider enabling location for better assistance.",
+        variant: "warning",
+      });
+    } else if (locationStatus === 'unknown') {
+      // Try to get permission now
+      checkLocationPermission();
     }
     
     setIsActive(true);
@@ -71,9 +118,13 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
       const result = await sendEmergencyAlert();
       
       if (result.success) {
+        const locationInfo = result.includesLocation 
+          ? "Your current location was shared." 
+          : "Location could not be shared.";
+          
         toast({
           title: "Emergency alert sent",
-          description: `Alert sent to ${result.sentTo} contacts.`,
+          description: `Alert sent to ${result.sentTo} contacts. ${locationInfo} They have been prompted to call you or emergency services.`,
           variant: "default",
         });
       } else {
@@ -112,6 +163,13 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
           <AlertTriangle className="text-white w-1/2 h-1/2" />
         ) : (
           <ShieldAlert className="text-white w-1/2 h-1/2" />
+        )}
+        
+        {/* Location status indicator */}
+        {locationStatus === 'granted' && (
+          <div className="absolute bottom-0 right-0 bg-green-400 rounded-full p-1 border-2 border-white">
+            <MapPin className="text-white w-3 h-3" />
+          </div>
         )}
         
         {/* Ripple effect */}
