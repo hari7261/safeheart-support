@@ -1,4 +1,3 @@
-
 // Type definitions
 export interface MoodEntry {
   id: string;
@@ -10,14 +9,14 @@ export interface MoodEntry {
 export interface EmergencyContact {
   id: string;
   name: string;
-  phone: string;
+  email: string;
   relationship: string;
 }
 
 export interface UserProfile {
   name: string;
   avatar?: string;
-  phone?: string;
+  email?: string;
   emergencyMessage: string;
 }
 

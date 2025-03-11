@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -22,7 +21,7 @@ const Emergency = () => {
   const [message, setMessage] = useState(emergencyMessage);
   const [newContact, setNewContact] = useState({
     name: '',
-    phone: '',
+    email: '',
     relationship: ''
   });
   const [showAddContact, setShowAddContact] = useState(false);
@@ -38,26 +37,35 @@ const Emergency = () => {
   const handleAddContact = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!newContact.name || !newContact.phone) {
+    if (!newContact.name || !newContact.email) {
       toast({
         title: "Missing information",
-        description: "Please provide both name and phone number.",
+        description: "Please provide both name and email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newContact.email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
         variant: "destructive",
       });
       return;
     }
     
-    addContact(newContact.name, newContact.phone, newContact.relationship);
+    addContact(newContact.name, newContact.email, newContact.relationship);
     
     toast({
       title: "Contact added",
       description: `${newContact.name} has been added to your emergency contacts.`,
     });
     
-    // Reset form
     setNewContact({
       name: '',
-      phone: '',
+      email: '',
       relationship: ''
     });
     setShowAddContact(false);
@@ -77,7 +85,6 @@ const Emergency = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left column - Emergency Button */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6 text-center">
                 <h2 className="text-xl font-semibold text-pink-900 mb-4">Emergency Alert</h2>
@@ -106,7 +113,6 @@ const Emergency = () => {
                 </div>
               </div>
               
-              {/* Safety Tips */}
               <div className="mt-8">
                 <SafetyTipsCard 
                   title="Safety Tips" 
@@ -114,7 +120,6 @@ const Emergency = () => {
                 />
               </div>
               
-              {/* Digital Safety Tips */}
               <div className="mt-8">
                 <SafetyTipsCard 
                   title="Digital Safety" 
@@ -124,9 +129,7 @@ const Emergency = () => {
               </div>
             </div>
             
-            {/* Right column - Emergency Contacts, Message & Helplines */}
             <div className="lg:col-span-2 space-y-8">
-              {/* Emergency Contacts */}
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-xl font-semibold text-pink-900">Emergency Contacts</h2>
@@ -153,14 +156,14 @@ const Emergency = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-pink-700 mb-1">Phone Number</label>
+                        <label htmlFor="email" className="block text-sm font-medium text-pink-700 mb-1">Email Address</label>
                         <input
-                          id="phone"
-                          type="tel"
-                          value={newContact.phone}
-                          onChange={(e) => setNewContact({...newContact, phone: e.target.value})}
+                          id="email"
+                          type="email"
+                          value={newContact.email}
+                          onChange={(e) => setNewContact({...newContact, email: e.target.value})}
                           className="w-full p-2 border border-pink-200 rounded focus:ring focus:ring-pink-200 focus:border-pink-400"
-                          placeholder="+1 (555) 123-4567"
+                          placeholder="example@email.com"
                         />
                       </div>
                     </div>
@@ -206,7 +209,7 @@ const Emergency = () => {
                           <div>
                             <h3 className="font-medium text-pink-900">{contact.name}</h3>
                             <div className="text-sm text-pink-600 space-x-2">
-                              <span>{contact.phone}</span>
+                              <span>{contact.email}</span>
                               {contact.relationship && (
                                 <span className="text-pink-400">· {contact.relationship}</span>
                               )}
@@ -238,7 +241,6 @@ const Emergency = () => {
                 )}
               </div>
               
-              {/* Emergency Message */}
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6">
                 <h2 className="text-xl font-semibold text-pink-900 mb-4">Emergency Message</h2>
                 <p className="text-pink-600 mb-4">
@@ -262,7 +264,6 @@ const Emergency = () => {
                 </div>
               </div>
               
-              {/* Helplines Directory */}
               <HelplineDirectory />
             </div>
           </div>

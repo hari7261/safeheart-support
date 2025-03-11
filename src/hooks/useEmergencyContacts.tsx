@@ -79,7 +79,6 @@ export function useEmergencyContacts() {
           locationData = await getCurrentLocation();
         } catch (error) {
           console.error("Failed to get location:", error);
-          // Continue without location if not available
         }
       }
       
@@ -95,26 +94,24 @@ export function useEmergencyContacts() {
         fullMessage += `Coordinates: ${locationData.latitude}, ${locationData.longitude}\n\n`;
       }
       
-      // Add user details if available
       if (userProfile.name) {
         fullMessage += `Sent by: ${userProfile.name}\n`;
       }
-      if (userProfile.phone) {
-        fullMessage += `Contact number: ${userProfile.phone}\n`;
+      if (userProfile.email) {
+        fullMessage += `Contact email: ${userProfile.email}\n`;
       }
       
-      fullMessage += "\nPlease call me or emergency services immediately.";
+      fullMessage += "\nPlease contact me or emergency services immediately.";
       
       console.log('EMERGENCY ALERT TRIGGERED');
-      console.log(`Message to send: ${fullMessage}`);
+      console.log(`Email content: ${fullMessage}`);
       
-      // Log the messages that would be sent (for demonstration)
+      // Log the emails that would be sent (for demonstration)
       contacts.forEach(contact => {
-        console.log(`Sending to ${contact.name} (${contact.phone}): ${fullMessage}`);
+        console.log(`Sending email to ${contact.name} (${contact.email}): ${fullMessage}`);
       });
 
-      // In a real implementation, this would call a backend API to send SMS
-      // For now, we'll return success for demonstration
+      // In a real implementation, this would call a backend API to send emails
       return {
         success: true,
         sentTo: contacts.length,

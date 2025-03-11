@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
@@ -7,16 +6,15 @@ import { getUserProfile, saveUserProfile, UserProfile } from '@/utils/localStora
 import { toast } from '@/hooks/use-toast';
 
 const Profile = () => {
-  // Update the state definition to match the UserProfile interface
   const [profile, setProfile] = useState<UserProfile>({
     name: '',
     emergencyMessage: '',
+    email: '',
   });
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load user profile from localStorage
     const storedProfile = getUserProfile();
     setProfile(storedProfile);
     setLoading(false);
@@ -56,13 +54,11 @@ const Profile = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            {/* Profile Information - Left Column */}
             <div className="lg:col-span-8 space-y-8">
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6">
                 <h2 className="text-xl font-semibold text-pink-900 mb-6">Personal Information</h2>
                 
                 <div className="space-y-6">
-                  {/* Name */}
                   <div className="flex flex-col md:flex-row md:items-center">
                     <label className="w-full md:w-1/4 text-pink-700 font-medium mb-2 md:mb-0">
                       <div className="flex items-center">
@@ -81,7 +77,25 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  {/* Phone */}
+                  <div className="flex flex-col md:flex-row md:items-center">
+                    <label className="w-full md:w-1/4 text-pink-700 font-medium mb-2 md:mb-0">
+                      <div className="flex items-center">
+                        <Phone className="w-4 h-4 mr-2" />
+                        <span>Email</span>
+                      </div>
+                    </label>
+                    <div className="w-full md:w-3/4">
+                      <input
+                        type="email"
+                        name="email"
+                        value={profile.email || ''}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-pink-200 rounded focus:ring focus:ring-pink-200 focus:border-pink-400"
+                        placeholder="example@email.com"
+                      />
+                    </div>
+                  </div>
+                  
                   <div className="flex flex-col md:flex-row md:items-center">
                     <label className="w-full md:w-1/4 text-pink-700 font-medium mb-2 md:mb-0">
                       <div className="flex items-center">
@@ -101,7 +115,6 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  {/* Emergency Message */}
                   <div className="flex flex-col">
                     <label className="text-pink-700 font-medium mb-2">
                       <div className="flex items-center">
@@ -120,7 +133,6 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  {/* Avatar Upload Placeholder - This would typically use a file upload component */}
                   <div className="flex flex-col md:flex-row md:items-center">
                     <label className="w-full md:w-1/4 text-pink-700 font-medium mb-2 md:mb-0">
                       <div className="flex items-center">
@@ -153,9 +165,7 @@ const Profile = () => {
               </div>
             </div>
             
-            {/* Help & Information - Right Column */}
             <div className="lg:col-span-4 space-y-8">
-              {/* Privacy Information */}
               <div className="bg-white rounded-xl shadow-sm border border-pink-100 p-6">
                 <h2 className="text-xl font-semibold text-pink-900 mb-4">Privacy & Security</h2>
                 <p className="text-pink-700 mb-4">
