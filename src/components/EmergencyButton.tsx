@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { AlertTriangle, ShieldAlert } from 'lucide-react';
 import { useEmergencyContacts } from '@/hooks/useEmergencyContacts';
 import { toast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface EmergencyButtonProps {
   size?: 'sm' | 'md' | 'lg';
@@ -13,6 +14,7 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
   const [isActive, setIsActive] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const { contacts, sendEmergencyAlert } = useEmergencyContacts();
+  const navigate = useNavigate();
   
   const sizeClasses = {
     sm: 'h-12 w-12',
@@ -21,6 +23,19 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
   };
   
   const handlePress = () => {
+    // Check if contacts exist before starting the countdown
+    if (contacts.length === 0) {
+      toast({
+        title: "No emergency contacts",
+        description: "Please add emergency contacts before using the alert feature.",
+        variant: "destructive",
+      });
+      
+      // Navigate to the emergency page to add contacts
+      navigate('/emergency');
+      return;
+    }
+    
     setIsActive(true);
     // Start a 3-second countdown
     setCountdown(3);
@@ -51,16 +66,6 @@ export function EmergencyButton({ size = 'md', className = '' }: EmergencyButton
   };
   
   const triggerAlert = async () => {
-    if (contacts.length === 0) {
-      toast({
-        title: "No emergency contacts",
-        description: "Please add emergency contacts in your profile.",
-        variant: "destructive",
-      });
-      setIsActive(false);
-      return;
-    }
-    
     // Send emergency alert
     try {
       const result = await sendEmergencyAlert();
