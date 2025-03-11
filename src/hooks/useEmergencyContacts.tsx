@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { EmergencyContact, getEmergencyContacts, saveEmergencyContact, deleteEmergencyContact, getUserProfile, saveUserProfile } from '../utils/localStorage';
 
@@ -86,31 +85,42 @@ export function useEmergencyContacts() {
       
       const userProfile = getUserProfile();
       
-      // Prepare the complete emergency message with location
-      let fullMessage = emergencyMessage || "I need help. This is an emergency.";
+      // Format the emergency message with complete details
+      let fullMessage = `EMERGENCY ALERT\n\n`;
+      fullMessage += `${emergencyMessage || "I need help. This is an emergency."}\n\n`;
       
       if (locationData) {
         const mapLink = getLocationMapLink(locationData);
-        fullMessage += `\n\nMy current location: ${mapLink}`;
+        fullMessage += `My current location: ${mapLink}\n`;
+        fullMessage += `Coordinates: ${locationData.latitude}, ${locationData.longitude}\n\n`;
       }
       
-      fullMessage += "\n\nPlease call me or emergency services immediately.";
+      // Add user details if available
+      if (userProfile.name) {
+        fullMessage += `Sent by: ${userProfile.name}\n`;
+      }
+      if (userProfile.phone) {
+        fullMessage += `Contact number: ${userProfile.phone}\n`;
+      }
+      
+      fullMessage += "\nPlease call me or emergency services immediately.";
       
       console.log('EMERGENCY ALERT TRIGGERED');
       console.log(`Message to send: ${fullMessage}`);
       
-      // In a real app, this would send SMS via a service like Twilio
+      // Log the messages that would be sent (for demonstration)
       contacts.forEach(contact => {
         console.log(`Sending to ${contact.name} (${contact.phone}): ${fullMessage}`);
-        // TODO: In a production app, this would call a backend API to send SMS
       });
 
-      // Return success for demo purposes
+      // In a real implementation, this would call a backend API to send SMS
+      // For now, we'll return success for demonstration
       return {
         success: true,
         sentTo: contacts.length,
         timestamp: new Date().toISOString(),
-        includesLocation: !!locationData
+        includesLocation: !!locationData,
+        message: fullMessage
       };
     } catch (error) {
       console.error("Error in sendEmergencyAlert:", error);
